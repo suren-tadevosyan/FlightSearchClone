@@ -36,7 +36,8 @@ const AirportInput = ({ label, onSelect }) => {
               params: { query: query },
               cancelToken: source.token,
               headers: {
-                "x-rapidapi-key": "9db8884e54mshb8f2c55c633f9d5p1c2fdejsn25ca344835c1",
+                "x-rapidapi-key":
+                  "9db8884e54mshb8f2c55c633f9d5p1c2fdejsn25ca344835c1",
                 "x-rapidapi-host": "sky-scrapper.p.rapidapi.com",
               },
             }
@@ -69,19 +70,18 @@ const AirportInput = ({ label, onSelect }) => {
   const handleSelect = async (airport) => {
     let selectedQuery = airport.presentation.suggestionTitle;
 
-    // If user selects a country, map it to its capital city
     if (countryToCapital[selectedQuery]) {
-      selectedQuery = countryToCapital[selectedQuery]; // Replace country with its capital
+      selectedQuery = countryToCapital[selectedQuery];
       setQuery(`${selectedQuery} (Auto-selected)`);
 
-      // Fetch the actual capital city airport data
       try {
         const response = await axios.get(
           "https://sky-scrapper.p.rapidapi.com/api/v1/flights/searchAirport",
           {
             params: { query: selectedQuery },
             headers: {
-              "x-rapidapi-key": "9db8884e54mshb8f2c55c633f9d5p1c2fdejsn25ca344835c1",
+              "x-rapidapi-key":
+                "9db8884e54mshb8f2c55c633f9d5p1c2fdejsn25ca344835c1",
               "x-rapidapi-host": "sky-scrapper.p.rapidapi.com",
             },
           }
@@ -89,7 +89,7 @@ const AirportInput = ({ label, onSelect }) => {
 
         const capitalAirports = response.data.data || [];
         if (capitalAirports.length > 0) {
-          airport = capitalAirports[0]; // Pick the first airport in the capital city
+          airport = capitalAirports[0];
         }
       } catch (error) {
         console.error("Error fetching capital city airport:", error);
