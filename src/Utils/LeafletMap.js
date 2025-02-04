@@ -2,30 +2,29 @@ import React, { useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import "leaflet-arc";
 
 const FlightPath = ({ departure, arrival }) => {
   const map = useMap();
 
   useEffect(() => {
-    if (departure && arrival) {
-      const latlngs = [
-        L.latLng(departure[0], departure[1]),
-        L.latLng(arrival[0], arrival[1]),
-      ];
+    if (!map || !departure || !arrival) return;
 
-      map.fitBounds(latlngs, { padding: [50, 50] });
+    const latlngs = [
+      L.latLng(departure[0], departure[1]),
+      L.latLng(arrival[0], arrival[1]),
+    ];
 
-      const arc = L.Polyline.Arc(latlngs[0], latlngs[1], {
-        color: "blue",
-        weight: 3,
-        dashArray: "5,10",
-      }).addTo(map);
+    map.fitBounds(latlngs, { padding: [50, 50] });
 
-      return () => {
-        map.removeLayer(arc);
-      };
-    }
+    const flightPath = L.polyline(latlngs, {
+      color: "blue",
+      weight: 3,
+      dashArray: "5,5",
+    }).addTo(map);
+
+    return () => {
+      map.removeLayer(flightPath);
+    };
   }, [departure, arrival, map]);
 
   return null;
@@ -43,12 +42,10 @@ const customIcon = new L.Icon({
 });
 
 const LeafletMap = ({ departure, arrival }) => {
-  const center = departure || [40.7128, -74.006];
-
   return (
     <div className="relative z-10 h-[400px] w-full">
       <MapContainer
-        center={center}
+        center={departure || [40.7128, -74.006]}
         zoom={4}
         style={{ height: "100vh", width: "100%" }}
       >
@@ -59,6 +56,7 @@ const LeafletMap = ({ departure, arrival }) => {
             <Popup>Departure</Popup>
           </Marker>
         )}
+
         {arrival && (
           <Marker position={arrival} icon={customIcon}>
             <Popup>Arrival</Popup>

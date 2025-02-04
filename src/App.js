@@ -25,7 +25,7 @@ function App() {
     const options = {
       method: "GET",
       headers: {
-        "x-rapidapi-key": "9db8884e54mshb8f2c55c633f9d5p1c2fdejsn25ca344835c1",
+        "x-rapidapi-key": "2de54ae263msh5359d1ce9d7d793p1cc2f4jsn89e32f25eb66",
         "x-rapidapi-host": "sky-scrapper.p.rapidapi.com",
       },
     };
@@ -33,7 +33,6 @@ function App() {
     try {
       const response = await fetch(url, options);
       const result = await response.json();
-      console.log(result);
       setFlights(result.data || []);
     } catch (error) {
       console.error("Error searching for flights:", error);
@@ -44,9 +43,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-4 flex flex-col lg:flex-row gap-4 transition-all duration-300">
-     
       <div className="w-full lg:w-1/2 flex flex-col gap-4">
-  
         <motion.div
           className="bg-white p-6 rounded-xl shadow-lg"
           initial={{ opacity: 0, x: -50 }}
@@ -85,7 +82,6 @@ function App() {
           )}
         </motion.div>
 
-
         <motion.div
           className="bg-white p-6 rounded-xl shadow-lg flex-1 overflow-auto"
           initial={{ opacity: 0, x: -50 }}
@@ -101,7 +97,6 @@ function App() {
           )}
         </motion.div>
       </div>
-
 
       <motion.div
         className="w-full lg:w-1/2 bg-white rounded-xl shadow-lg overflow-hidden"

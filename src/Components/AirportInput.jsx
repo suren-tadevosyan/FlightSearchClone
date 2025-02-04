@@ -41,7 +41,7 @@ const AirportInput = ({ label, onSelect }) => {
             cancelToken: source.token,
             headers: {
               "x-rapidapi-key":
-                "9db8884e54mshb8f2c55c633f9d5p1c2fdejsn25ca344835c1",
+                "2de54ae263msh5359d1ce9d7d793p1cc2f4jsn89e32f25eb66",
               "x-rapidapi-host": "sky-scrapper.p.rapidapi.com",
             },
           })
@@ -81,7 +81,7 @@ const AirportInput = ({ label, onSelect }) => {
           params: { query: selectedQuery },
           headers: {
             "x-rapidapi-key":
-              "9db8884e54mshb8f2c55c633f9d5p1c2fdejsn25ca344835c1",
+              "2de54ae263msh5359d1ce9d7d793p1cc2f4jsn89e32f25eb66",
             "x-rapidapi-host": "sky-scrapper.p.rapidapi.com",
           },
         });

@@ -87,7 +87,7 @@ const SearchForm = ({ onSearch, setIsSearchFormExpanded }) => {
           className="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 transition-all"
           onClick={() => setIsSearchFormExpanded(false)}
         >
-          Hide Search Form
+          Hide
         </button>
       </div>
 
