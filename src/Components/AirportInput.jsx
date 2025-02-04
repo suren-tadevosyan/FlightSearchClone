@@ -1,47 +1,50 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const countryToCapital = {
-  France: "Paris",
-  Germany: "Berlin",
-  Italy: "Rome",
-  Spain: "Madrid",
-  UnitedKingdom: "London",
-  UnitedStates: "Washington",
-  Canada: "Ottawa",
-  Australia: "Canberra",
-  Japan: "Tokyo",
-  India: "New Delhi",
-};
+const AIRPORT_API_URL =
+  "https://sky-scrapper.p.rapidapi.com/api/v1/flights/searchAirport";
+const GITHUB_JSON_URL =
+  "https://raw.githubusercontent.com/samayo/country-json/master/src/country-by-capital-city.json";
 
 const AirportInput = ({ label, onSelect }) => {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selected, setSelected] = useState(false);
+  const [countryToCapital, setCountryToCapital] = useState({});
+
+  useEffect(() => {
+    axios
+      .get(GITHUB_JSON_URL)
+      .then((response) => {
+        const mapping = {};
+        response.data.forEach((entry) => {
+          mapping[entry.country] = entry.city;
+        });
+        setCountryToCapital(mapping);
+      })
+      .catch((error) =>
+        console.error("Error fetching country-capital data:", error)
+      );
+  }, []);
 
   useEffect(() => {
     if (selected) return;
 
     const source = axios.CancelToken.source();
-
     const delayDebounceFn = setTimeout(() => {
       if (query.length > 1) {
         setIsLoading(true);
-
         axios
-          .get(
-            "https://sky-scrapper.p.rapidapi.com/api/v1/flights/searchAirport",
-            {
-              params: { query: query },
-              cancelToken: source.token,
-              headers: {
-                "x-rapidapi-key":
-                  "9db8884e54mshb8f2c55c633f9d5p1c2fdejsn25ca344835c1",
-                "x-rapidapi-host": "sky-scrapper.p.rapidapi.com",
-              },
-            }
-          )
+          .get(AIRPORT_API_URL, {
+            params: { query },
+            cancelToken: source.token,
+            headers: {
+              "x-rapidapi-key":
+                "9db8884e54mshb8f2c55c633f9d5p1c2fdejsn25ca344835c1",
+              "x-rapidapi-host": "sky-scrapper.p.rapidapi.com",
+            },
+          })
           .then((response) => {
             setSuggestions(response.data.data || []);
           })
@@ -52,9 +55,7 @@ const AirportInput = ({ label, onSelect }) => {
               console.error("Error fetching airport suggestions:", error);
             }
           })
-          .finally(() => {
-            setIsLoading(false);
-          });
+          .finally(() => setIsLoading(false));
       } else {
         setSuggestions([]);
         setIsLoading(false);
@@ -70,22 +71,20 @@ const AirportInput = ({ label, onSelect }) => {
   const handleSelect = async (airport) => {
     let selectedQuery = airport.presentation.suggestionTitle;
 
+ 
     if (countryToCapital[selectedQuery]) {
       selectedQuery = countryToCapital[selectedQuery];
       setQuery(`${selectedQuery} (Auto-selected)`);
 
       try {
-        const response = await axios.get(
-          "https://sky-scrapper.p.rapidapi.com/api/v1/flights/searchAirport",
-          {
-            params: { query: selectedQuery },
-            headers: {
-              "x-rapidapi-key":
-                "9db8884e54mshb8f2c55c633f9d5p1c2fdejsn25ca344835c1",
-              "x-rapidapi-host": "sky-scrapper.p.rapidapi.com",
-            },
-          }
-        );
+        const response = await axios.get(AIRPORT_API_URL, {
+          params: { query: selectedQuery },
+          headers: {
+            "x-rapidapi-key":
+              "9db8884e54mshb8f2c55c633f9d5p1c2fdejsn25ca344835c1",
+            "x-rapidapi-host": "sky-scrapper.p.rapidapi.com",
+          },
+        });
 
         const capitalAirports = response.data.data || [];
         if (capitalAirports.length > 0) {
