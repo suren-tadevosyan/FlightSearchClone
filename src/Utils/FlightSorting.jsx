@@ -2,7 +2,7 @@ import React from "react";
 
 const FlightSorting = ({ sortOption, handleSortChange }) => {
   return (
-    <div className="flex items-center justify-end mb-4">
+    <div className="flex items-center justify-start mb-4">
       <label className="mr-2 font-medium text-gray-700">Sort By:</label>
       <select
         value={sortOption}

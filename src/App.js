@@ -44,7 +44,9 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-4 flex flex-col lg:flex-row gap-4 transition-all duration-300">
+     
       <div className="w-full lg:w-1/2 flex flex-col gap-4">
+  
         <motion.div
           className="bg-white p-6 rounded-xl shadow-lg"
           initial={{ opacity: 0, x: -50 }}
@@ -62,7 +64,11 @@ function App() {
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <SearchForm onSearch={handleSearch} />
+                <SearchForm
+                  onSearch={handleSearch}
+                  isSearchFormExpanded={isSearchFormExpanded}
+                  setIsSearchFormExpanded={setIsSearchFormExpanded}
+                />
               </motion.div>
             )}
           </AnimatePresence>
@@ -79,6 +85,7 @@ function App() {
           )}
         </motion.div>
 
+
         <motion.div
           className="bg-white p-6 rounded-xl shadow-lg flex-1 overflow-auto"
           initial={{ opacity: 0, x: -50 }}
@@ -94,6 +101,7 @@ function App() {
           )}
         </motion.div>
       </div>
+
 
       <motion.div
         className="w-full lg:w-1/2 bg-white rounded-xl shadow-lg overflow-hidden"
