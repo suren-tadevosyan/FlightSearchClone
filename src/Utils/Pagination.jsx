@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const Pagination = ({
   currentPage,
@@ -7,26 +7,44 @@ const Pagination = ({
   handleNextPage,
   handlePageClick,
 }) => {
+  const [maxVisiblePages, setMaxVisiblePages] = useState(5); 
+
+  useEffect(() => {
+    const updateMaxVisiblePages = () => {
+      if (window.innerWidth < 768) {
+        setMaxVisiblePages(3); 
+      } else {
+        setMaxVisiblePages(5); 
+      }
+    };
+
+    
+    updateMaxVisiblePages();
+    window.addEventListener("resize", updateMaxVisiblePages);
+
+
+    return () => window.removeEventListener("resize", updateMaxVisiblePages);
+  }, []);
+
   const getPageNumbers = () => {
     const pages = [];
-    const maxVisiblePages = 5; 
-    const sidePages = 2; 
+    const sidePages = 1; 
 
     if (totalPages <= maxVisiblePages) {
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
 
-    if (currentPage <= sidePages + 2) {
-      pages.push(...Array.from({ length: sidePages + 3 }, (_, i) => i + 1));
+    if (currentPage <= sidePages + 1) {
+      pages.push(...Array.from({ length: maxVisiblePages - 1 }, (_, i) => i + 1));
       pages.push("...");
       pages.push(totalPages);
-    } else if (currentPage >= totalPages - sidePages - 1) {
+    } else if (currentPage >= totalPages - sidePages) {
       pages.push(1);
       pages.push("...");
       pages.push(
         ...Array.from(
-          { length: sidePages + 3 },
-          (_, i) => totalPages - sidePages - 2 + i
+          { length: maxVisiblePages - 1 },
+          (_, i) => totalPages - (maxVisiblePages - 2) + i
         )
       );
     } else {

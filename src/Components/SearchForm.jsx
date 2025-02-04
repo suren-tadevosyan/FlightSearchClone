@@ -4,23 +4,43 @@ import { motion } from "framer-motion";
 
 const SearchForm = ({
   onSearch,
-  isSearchFormExpanded,
-  setIsSearchFormExpanded,
 }) => {
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
   const [date, setDate] = useState("");
 
-  const handleSubmit = (e) => {
+  const getCoordinates = async (city) => {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${city}`
+    );
+    const data = await response.json();
+    if (data.length > 0) {
+      return [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+    }
+    return null;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (origin && destination && date) {
-      onSearch({
-        originSkyId: origin.navigation.relevantFlightParams.skyId,
-        destinationSkyId: destination.navigation.relevantFlightParams.skyId,
-        originEntityId: origin.navigation.entityId,
-        destinationEntityId: destination.navigation.entityId,
-        date: date,
-      });
+      const depCoords = await getCoordinates(
+        origin.presentation.suggestionTitle
+      );
+      const arrCoords = await getCoordinates(
+        destination.presentation.suggestionTitle
+      );
+
+      onSearch(
+        {
+          originSkyId: origin.navigation.relevantFlightParams.skyId,
+          destinationSkyId: destination.navigation.relevantFlightParams.skyId,
+          originEntityId: origin.navigation.entityId,
+          destinationEntityId: destination.navigation.entityId,
+          date: date,
+        },
+        depCoords,
+        arrCoords
+      );
     } else {
       alert("Please select both origin and destination cities and a date.");
     }
@@ -49,35 +69,26 @@ const SearchForm = ({
         <label className="block mb-2 text-lg font-medium text-gray-700">
           Date
         </label>
-        <label className="w-full block cursor-pointer">
+        <div
+          className="relative w-full"
+          onClick={() => document.getElementById("dateInput").showPicker()}
+        >
           <input
             type="date"
+            id="dateInput"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer bg-white text-gray-900"
             required
           />
-        </label>
+        </div>
       </div>
-      <div className="text-center">
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg shadow-md hover:bg-blue-700 transition-all"
-        >
-          Search Flights
-        </button>
-        {isSearchFormExpanded && (
-          <div className="text-center my-4">
-            <button
-              type="button"
-              className="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 transition-all"
-              onClick={() => setIsSearchFormExpanded(false)}
-            >
-              Close Search Form
-            </button>
-          </div>
-        )}
-      </div>
+      <button
+        type="submit"
+        className="w-full bg-blue-600 text-white py-3 rounded-lg"
+      >
+        Search Flights
+      </button>
     </motion.form>
   );
 };

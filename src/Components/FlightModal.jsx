@@ -29,7 +29,6 @@ const FlightModal = ({ flight, onClose }) => {
     ? `${destination.name} (${destination.displayCode}), ${destination.city}`
     : "N/A";
 
-  // Format the departure and arrival times using the helper
   const departureTime = formatDateTime(firstLeg?.departure);
   const arrivalTime = formatDateTime(firstLeg?.arrival);
   const duration = firstLeg?.durationInMinutes
@@ -42,14 +41,20 @@ const FlightModal = ({ flight, onClose }) => {
   const price = flight.price?.formatted || "N/A";
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
-      <div className="fixed inset-0 bg-black opacity-50" onClick={onClose}></div>
+    <div className="fixed inset-0 flex items-center justify-center z-50"> 
+     
+      <div
+        className="fixed inset-0 bg-black opacity-50 z-40"
+        onClick={onClose}
+      ></div>
 
+  
       <motion.div
-        className="bg-white rounded-lg shadow-xl p-6 max-w-lg w-full relative z-50"
+        className="bg-white rounded-lg shadow-xl p-6 max-w-lg w-full relative z-50" 
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
       >
+     
         <div className="flex justify-between items-center border-b pb-2">
           <h2 className="text-2xl font-bold text-gray-800">Flight Details</h2>
           <button onClick={onClose} className="text-gray-600 hover:text-gray-900 text-2xl">
@@ -57,6 +62,7 @@ const FlightModal = ({ flight, onClose }) => {
           </button>
         </div>
 
+    
         <div className="mt-4">
           <div className="flex items-center space-x-4">
             {airlineLogo && (
@@ -65,12 +71,14 @@ const FlightModal = ({ flight, onClose }) => {
             <span className="text-lg font-semibold">{airline}</span>
           </div>
 
+  
           <div className="mt-4">
             <p className="text-gray-700 font-semibold">Route:</p>
             <p className="text-gray-600">{originDisplay}</p>
             <span className="w-32 flex justify-center">↓</span>
             <p className="text-gray-600">{destinationDisplay}</p>
           </div>
+
 
           <div className="mt-4 grid grid-cols-2 gap-4">
             <div>
@@ -83,6 +91,7 @@ const FlightModal = ({ flight, onClose }) => {
             </div>
           </div>
 
+        
           <div className="mt-4 grid grid-cols-2 gap-4">
             <div>
               <p className="text-gray-700 font-semibold">Duration:</p>
@@ -94,6 +103,7 @@ const FlightModal = ({ flight, onClose }) => {
             </div>
           </div>
         </div>
+
 
         <button
           onClick={onClose}
